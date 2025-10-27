@@ -1,0 +1,22 @@
+#NoEnv
+SendMode Input
+SetWorkingDir %A_ScriptDir%
+
+; --- Carpeta local de Google Drive ---
+; ⚠️ Cambia esta ruta según tu PC
+CarpetaDrive := "G:\Mi unidad\Cartas"
+
+; Crear si no existe
+if !FileExist(CarpetaDrive)
+    FileCreateDir, %CarpetaDrive%
+
+; --- Carpeta origen (archivos) ---
+CarpetaOrigen := A_Desktop "\archivos"
+
+; --- Copiar todos los CSV ---
+Loop, Files, %CarpetaOrigen%\*.csv
+{
+    FileCopy, %A_LoopFileFullPath%, %CarpetaDrive%\%A_LoopFileName%, 1
+}
+
+ExitApp
