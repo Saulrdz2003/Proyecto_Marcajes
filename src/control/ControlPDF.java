@@ -207,7 +207,7 @@ public class ControlPDF extends ControlBase {
 
         document.add(new Paragraph("A quien corresponda,", textoFont));
         document.add(new Paragraph(" "));
-        document.add(new Paragraph("Yo, " + nombre + ", con código " + codigo + ", en las fechas dadas en la siguiente tabla:", textoFont));
+        document.add(new Paragraph("Se muestra informe de los marcajes del mes correspondiente a " + nombre + ", extendida el dia  " + dia + ", se da la siguiente tabla con la nomenclatura de los colores correspondientes a las faltas", textoFont));
         document.add(new Paragraph(" "));
 
         // --- Tabla de Nomenclatura de Colores ---
@@ -247,7 +247,7 @@ public class ControlPDF extends ControlBase {
             int holguraTotal = faltasDelDia.stream().mapToInt(Falta::getTiempoHolgura).sum();
 
             // Determinar color de fila
-            BaseColor colorFila = BaseColor.GREEN;
+            BaseColor colorFila = BaseColor.WHITE;
             for (Falta f : faltasDelDia) {
                 switch (f.getMotivo()) {
                     case FALTA_COMPLETA -> colorFila = BaseColor.RED;
@@ -301,6 +301,8 @@ public class ControlPDF extends ControlBase {
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
     }
+    
+     
 
 
 }

@@ -42,44 +42,6 @@ public class Sistema_Lector_CSV {
             System.out.println("Aplicación cerrada. Datos serializados.");
         }));
     
-    //Esto sirve solo colocarlo en la parte de control
     
-    //JOptionPane.showMessageDialog(null, "Iniciando proceso AHK", "Info", JOptionPane.INFORMATION_MESSAGE);
-    /*
-    try {
-        // Usar ProcessBuilder para mejor control
-        ProcessBuilder pb = new ProcessBuilder("C:\\Users\\Saúl\\Desktop\\Automata\\Share.exe");
-        pb.redirectErrorStream(true);
-        
-        Process process = pb.start();
-        
-        // Leer output en hilo separado para evitar bloqueos
-        new Thread(() -> {
-            try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(process.getInputStream()))) {
-                
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    System.out.println("AHK: " + line);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-        
-        // Esperar con timeout
-        if (process.waitFor(60, TimeUnit.SECONDS)) {
-            System.out.println("Proceso completado exitosamente");
-        } else {
-            process.destroyForcibly();
-            System.out.println("Proceso terminado por timeout");
-        }
-        
-    } catch (IOException | InterruptedException e) {
-        JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();
-    }
-}
-    */
 }
 }

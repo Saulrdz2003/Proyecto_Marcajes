@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -48,7 +49,7 @@ public class Control {
     private ControlTiempos controlTiempos;
     private String fechaReporte;   
     private Timer temporizadorInactividad;
-    private int segundosRestantes = 10;
+    private int segundosRestantes = 90;
     
     public Control(Vista vista, Modelo modelo) {
         this.vista = vista;
@@ -575,7 +576,7 @@ public class Control {
     
     public void agregarEscuchaDeInteraccion() {
         java.awt.Toolkit.getDefaultToolkit().addAWTEventListener(event -> {
-            segundosRestantes = 10; // Reinicia contador
+            segundosRestantes = 90; // Reinicia contador
         }, java.awt.AWTEvent.KEY_EVENT_MASK | java.awt.AWTEvent.MOUSE_EVENT_MASK);
     }
     
@@ -583,7 +584,7 @@ public class Control {
         try {
             // 1. Primero ejecutar el script AHK para renombrar
             String rutaEscritorio = System.getProperty("user.home") + File.separator + "Desktop";
-            String rutaScript = rutaEscritorio + File.separator + "Automata" + File.separator + "auto_renombrar.ahk";
+            String rutaScript = rutaEscritorio + File.separator + "Automata" + File.separator + "auto_renombrar.exe";
             Process process = Runtime.getRuntime().exec("cmd /c start \"\" \"" + rutaScript + "\"");
             process.waitFor(); // Esperar a que termine el script AHK
 
@@ -667,8 +668,22 @@ public class Control {
         }
     }
 
+    
+    public void enviar() throws IOException, InterruptedException{
+          
+            // Obtener la ruta local de las cartas
+            String carpetaCartas = modelo.getHistorial().getUbicacionCartas();
 
+            // Ruta al script AHK que has modificado
+            String rutaScript = System.getProperty("user.home") + "\\Desktop\\Automata\\Compartir.exe";
 
+            // Comando para ejecutar AHK con el parámetro de la carpeta origen
+            String comando = "cmd /c start \"\" \"" + rutaScript + "\" \"" + carpetaCartas + "\"";
+            Process process = Runtime.getRuntime().exec(comando);
+            process.waitFor();  // esperar que termine
+        }
 
-    }    
+    }
+
+    
     
