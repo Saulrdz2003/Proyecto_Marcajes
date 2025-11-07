@@ -453,13 +453,20 @@ public class Informe extends VistaBase {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String fecha = Control.FechaCarta();
+        String code = (String) CUI.getSelectedItem();
+
+        String[] parte = code.split("-");
+        
         String nombre = Nombre.getText();
         String ruta = controlador.getModelo().getHistorial().getUbicacionCartas();
-        Long codigo = null;
+        long codigo = Long.parseLong(parte[0].trim());
+        
+        
+        
         try {
             Object item = CUI.getSelectedItem();
             if (item != null) {
-                codigo = Long.valueOf(item.toString());
+                JOptionPane.showMessageDialog(this, "Informe creado para " + parte[1] , "Error", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "No se seleccionó ningún código", "Error", JOptionPane.WARNING_MESSAGE);
                 return;
