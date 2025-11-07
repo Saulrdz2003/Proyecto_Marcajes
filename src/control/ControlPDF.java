@@ -3,9 +3,11 @@ package control;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,52 @@ import modelo.*;
 import modelo.Trabajador;
 
 public class ControlPDF extends ControlBase {
+    
+
+
+    public class HeaderEvent extends PdfPageEventHelper {
+        private Image logo;
+        private String textoEncabezado;
+
+        public HeaderEvent(String rutaLogo, String textoEncabezado) throws BadElementException, IOException {
+            this.logo = Image.getInstance(rutaLogo);
+            this.logo.scaleToFit(60, 60); // tamaño del logo
+            this.textoEncabezado = textoEncabezado;
+        }
+
+        @Override
+        public void onEndPage(PdfWriter writer, Document document) {
+            PdfContentByte cb = writer.getDirectContent();
+
+            float x = document.left(); // margen izquierdo
+            float y = document.getPageSize().getHeight() - document.topMargin() + 10;
+
+            // Dibujar el logo en la esquina superior izquierda
+            logo.setAbsolutePosition(x, y - logo.getScaledHeight());
+            try {
+                cb.addImage(logo);
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            }
+
+            // Dibujar el texto del encabezado a la derecha del logo
+            ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,
+                    new Phrase(textoEncabezado, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14)),
+                    x + logo.getScaledWidth() + 10, // un poco a la derecha del logo
+                    y - logo.getScaledHeight()/2 + 10, // centrar verticalmente respecto al logo
+                    0);
+
+            // Dibujar una línea divisoria debajo del encabezado
+            LineSeparator sep = new LineSeparator(1f, 100f, BaseColor.BLACK, Element.ALIGN_CENTER, -2f);
+            sep.draw(cb,
+                     document.left(), 
+                     document.right(), 
+                     document.getPageSize().getWidth(),
+                     y - logo.getScaledHeight() - 5, // posición de la línea
+                     0);
+        }
+    }
+
 
     public void crearCartaPDF(String rutaSalida, String nombre, String dia, long codigo, String reportando)
             throws FileNotFoundException, DocumentException {
@@ -71,11 +119,9 @@ public class ControlPDF extends ControlBase {
         document.add(pSaludo);
         document.add(new Paragraph(" "));     
 
-        String intro = """
-                       Dese\u00e1ndoles toda clase de \u00e9xitos en el desarrollo de sus actividades diarias y laborales.
-                       
-                       Por este medio, adjunto el listado de faltas cometidas la fecha  """ + reportando + ", generado por el reloj biométrico, Le solicitamos que, en caso de que algún registro muestre inasistencias no justificadas, se informe mediante una nota dirigida a la Secretaría Adjunta. Esta nota debe entregarse de manera física dentro de un plazo de 3 días hábiles. Además, si existe algún cambio de horario que no haya sido notificado, le pedimos que informen y adjunten una copia del Dictamen correspondiente, emitido por Recursos Humanos.\n";
-        document.add(new Paragraph(intro, textoFont));
+        document.add(new Paragraph("Deseándole toda clase de éxitos en el desarrollo de sus actividades diarias y laborales.", textoFont));
+        document.add(new Paragraph(" "));
+        document.add(new Paragraph("Por este medio, adjunto el listado de faltas cometidas la fecha  " + reportando + ", generado por el reloj biométrico, Le solicitamos que, en caso de que algún registro muestre inasistencias no justificadas, se informe mediante una nota dirigida a la Secretaría Adjunta. Esta nota debe entregarse de manera física dentro de un plazo de 3 días hábiles. Además, si existe algún cambio de horario que no haya sido notificado, le pedimos que informen y adjunten una copia del Dictamen correspondiente, emitido por Recursos Humanos.", textoFont));
         document.add(new Paragraph(" "));
 
         // --- VERIFICAR SI EXISTEN FALTAS ---
