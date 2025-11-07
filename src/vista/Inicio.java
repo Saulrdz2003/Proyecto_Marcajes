@@ -4,6 +4,10 @@
  */
 package vista;
 
+import com.itextpdf.text.DocumentException;
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
@@ -136,7 +140,7 @@ public class Inicio extends VistaBase {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
        this.cargarArchivo(1, "csv");
-       
+       controlador.serializarModelo();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -183,6 +187,7 @@ public class Inicio extends VistaBase {
 
                 // Enviar al controlador para guardar
                 controlador.guardarHistorial(historial);
+                controlador.serializarModelo();
 
                 JOptionPane.showMessageDialog(
                     this,
@@ -253,6 +258,7 @@ public class Inicio extends VistaBase {
                 try {
                     // Llamar al controlador principal para eliminar los datos
                     controlador.getModelo().getHorarios().clear();
+                    controlador.serializarModelo();
                     // Agrega aquí las listas o modelos que tengas
 
                     JOptionPane.showMessageDialog(this, "✅ Todos los datos fueron eliminados correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
@@ -271,7 +277,12 @@ public class Inicio extends VistaBase {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        
+        try {
+            controlador.getControlPDF().escribirInstrucciones();
+             JOptionPane.showMessageDialog(this, "Se exporto una mini guia de uso en DESCARGAS.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+        } catch (FileNotFoundException | DocumentException ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated

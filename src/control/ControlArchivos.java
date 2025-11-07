@@ -2,7 +2,6 @@
 package control;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -172,6 +171,20 @@ public class ControlArchivos extends ControlBase{
                             continue;
                         }
                     }
+                    
+                    boolean repite = this.getControlPrincipal().repetido(date);
+                    
+                    if (repite) {
+                        JOptionPane.showMessageDialog(
+                            null,
+                            "⚠️ El día " + date + " ya fue procesado. No se cargará nuevamente.",
+                            "Fecha duplicada",
+                            JOptionPane.WARNING_MESSAGE
+                        );
+                        return; // 🔹 Sale del método inmediatamente
+                    }
+                    
+                    
 
                     // Parseo flexible de hora
                     LocalTime hora = parseHoraFlexible(horaStr, i);

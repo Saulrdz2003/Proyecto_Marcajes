@@ -33,7 +33,7 @@ public class Sistema_Lector_CSV {
         controlador.crearCondicionesIniciales();
         controlador.mostrarVentana(TipoVentana.Ventana.INICIO);
         
-       controlador.imprimirSerializados();
+        controlador.imprimirSerializados();
         
         //Serealización al cerrar
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {

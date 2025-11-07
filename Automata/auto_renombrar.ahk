@@ -5,34 +5,37 @@ SetWorkingDir %A_ScriptDir%
 FileEncoding, UTF-8
 
 ; === Ruta de destino ===
-; Carpeta "Marcajes" en el escritorio del usuario
 rutaDestino := A_Desktop "\Marcajes"
-
-; Variables para el loop
-fileCount := 0
-ultimoArchivo := ""
 
 ; Crear la carpeta si no existe
 IfNotExist, %rutaDestino%
     FileCreateDir, %rutaDestino%
 
-; Buscar archivos en la carpeta
-Loop, Files, %rutaDestino%\*, F
-{
-    fileCount++
-    ultimoArchivo := A_LoopFileFullPath
+; Variables para el loop
+ultimoArchivo := ""
+ultimaFecha := 0
+
+; === Buscar el archivo más reciente con extensiones csv, xls o xlsx ===
+for _, ext in ["csv", "xls", "xlsx"] {
+    Loop, Files, %rutaDestino%\*.%ext%, F
+    {
+        if (A_LoopFileTimeModified > ultimaFecha) {
+            ultimaFecha := A_LoopFileTimeModified
+            ultimoArchivo := A_LoopFileFullPath
+        }
+    }
 }
 
-; Si hay exactamente un archivo, renombrarlo silenciosamente
-if (fileCount = 1)
+; === Si se encontró al menos uno, renombrar el más reciente ===
+if (ultimoArchivo != "")
 {
     FormatTime, fechaActual,, yyyy-MM-dd
     SplitPath, ultimoArchivo, nombre, dir, ext, nombreSinExt
 
-    ; Nuevo nombre CSV
+    ; Nuevo nombre SIEMPRE con extensión .csv
     nuevoNombre := dir "\" fechaActual ".csv"
 
-    ; Cambiar nombre sin preguntar
+    ; Cambiar nombre (sobrescribe si ya existe)
     FileMove, %ultimoArchivo%, %nuevoNombre%, 1
 }
 ExitApp

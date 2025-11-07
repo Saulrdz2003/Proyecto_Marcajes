@@ -1,25 +1,11 @@
 
 package control;
 
-/**
-     * Crea una carta en PDF con nombre, fecha y motivo.
-     * @param rutaSalida Ruta del archivo PDF (por ejemplo "carta.pdf")
-     * @param nombre Persona a quien va dirigida la carta
-     * @param dia Fecha o día que quieres poner en la carta
-     * @param motivo Motivo o contenido de la carta
-     * @throws FileNotFoundException
-     * @throws DocumentException
-     */
-
 import com.itextpdf.text.DocumentException;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -29,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -49,6 +34,7 @@ public class Control {
     private ControlTiempos controlTiempos;
     private String fechaReporte;   
     private Timer temporizadorInactividad;
+    private boolean existe;
     private int segundosRestantes = 90;
     
     public Control(Vista vista, Modelo modelo) {
@@ -171,7 +157,7 @@ public class Control {
             List<Horario> horario = this.getModelo().getHorarios(); 
 
             for (Horario horarios : horario) {
-                modeloCombo.addElement(String.valueOf(horarios.getCodigo()));
+                modeloCombo.addElement(String.valueOf(horarios.getCodigo() + " - " + horarios.getNombre()));
             }
          
     }    
@@ -215,7 +201,6 @@ public class Control {
         Trabajador trabajador = new Trabajador(code, nombre, entrada, horaAlm, regreso, salida, fecha);
         this.modelo.agregarTrabajador(trabajador);
         
-
     }
     
     
@@ -273,11 +258,49 @@ public class Control {
                 mostrarResumenProcesamiento(registrosEmpleado, horario, nombreEmpleado);
             }
         }
-        
-        reportar();
-        
+        existe = false;
+        faltantes();
+        reportar();        
         escritura();
+        serializarModelo();
+        
+        if(existe = true){
+            JOptionPane.showMessageDialog(
+             null,  // padre null hace que el diálogo sea centrado en pantalla
+             "Ya se realizo un reporte de este dia.",
+             "Reporte Hecho",
+             JOptionPane.INFORMATION_MESSAGE
+         );
+            
+        }
     }
+   
+   private void faltantes() {
+        // Suponemos que modelo tiene una lista de horarios
+        for (Horario h : modelo.getHorarios()) {
+            Long codigoHorario = h.getCodigo();
+            String nombre = h.getNombre();
+            boolean exist = false;
+
+            // Recorremos todos los trabajadores para ver si ya hay uno con este CUI y dia
+            for (Trabajador t : modelo.getTrabajador()) {
+                if (Objects.equals(t.getCUI(), codigoHorario)
+                        && Objects.equals(t.getDia(), fechaReporte)) {
+                    exist = true;
+                    break;
+                }
+            }
+
+            // Si no existe, agregamos uno nuevo
+            if (!exist) {
+                Trabajador trabajador = new Trabajador(codigoHorario, nombre, null, null, null, null, fechaReporte);
+                this.modelo.agregarTrabajador(trabajador);
+
+                System.out.println("Añadido trabajador faltante con CUI " + codigoHorario + " para el día " + fechaReporte);
+            }
+        }
+    }
+
 
     private void asignarMarcaPorTipo(LocalTime[] asignaciones, LocalTime horaEsperada, 
                                    List<LocalTime> marcasDisponibles, int tolerancia,
@@ -314,7 +337,7 @@ public class Control {
     }
     
     private void escritura() {
-        String diaActual = FechaCarta(); // fecha actual o del reporte
+        String diaActual = FechaCarta(); // Fecha actual o del reporte
 
         for (Trabajador t : this.modelo.getTrabajador()) {
             String ruta = this.modelo.getHistorial().getUbicacionCartas();
@@ -326,6 +349,18 @@ public class Control {
                 .anyMatch(f -> Objects.equals(f.getCodigo(), cui) && Objects.equals(f.getDiaFalta(), fechaReporte));
 
             if (tieneFaltaHoy) {
+                // Construir nombre de la carta esperada
+                String nombreArchivo = ruta + "/Carta_" + nombre.replace(" ", "_") + "_" + fechaReporte.replace("/", "-") + ".pdf";
+                File carta = new File(nombreArchivo);
+
+                // Verificar si ya existe
+                if (carta.exists()) {
+                    System.out.println("⚠️ Ya existe una carta para " + nombre + " (" + cui + ") — se omitirá.");
+                    existe = true;
+                    continue; // No volver a crearla
+                }
+
+                // Si no existe, crearla
                 try {
                     this.controlPdf.crearCartaPDF(ruta, nombre, diaActual, cui, fechaReporte);
                     System.out.println("📄 Carta generada por falta: " + nombre + " (" + cui + ")");
@@ -334,16 +369,9 @@ public class Control {
                 }
             }
         }
-        
-        JOptionPane.showMessageDialog(
-             null,  // padre null hace que el diálogo sea centrado en pantalla
-             "Cartas creadas. El programa se cerrará.",
-             "Ejecución exitosa",
-             JOptionPane.WARNING_MESSAGE
-         );
-         System.exit(0);
-        
+
     }
+
     
     public List<Object[]> obtenerFaltasPorEmpleado(long codigo) {
         List<Object[]> faltas = new ArrayList<>();
@@ -508,6 +536,7 @@ public class Control {
                 System.out.println("🚫 Falta total asignada a " + h.getNombre() + " (" + codigo + ")");
             }
         }
+        
     }
     
     public void guardarHistorial(Historial historial) {
@@ -667,23 +696,20 @@ public class Control {
             System.err.println("❌ Error al cargar el archivo automáticamente: " + e.getMessage());
         }
     }
-
     
-    public void enviar() throws IOException, InterruptedException{
-          
-            // Obtener la ruta local de las cartas
-            String carpetaCartas = modelo.getHistorial().getUbicacionCartas();
-
-            // Ruta al script AHK que has modificado
-            String rutaScript = System.getProperty("user.home") + "\\Desktop\\Automata\\Compartir.exe";
-
-            // Comando para ejecutar AHK con el parámetro de la carpeta origen
-            String comando = "cmd /c start \"\" \"" + rutaScript + "\" \"" + carpetaCartas + "\"";
-            Process process = Runtime.getRuntime().exec(comando);
-            process.waitFor();  // esperar que termine
-        }
-
+    public void serializarModelo() {
+        ControlSerializacion serializador = new ControlSerializacion();
+        serializador.serializar(modelo);
     }
-
     
+    public boolean repetido(LocalDate date) {
+        String fechaIso = date.toString();  // forma "yyyy-MM-dd"
+        for (Trabajador t : modelo.getTrabajador()) {
+            if (fechaIso.equals(t.getDia())) {
+                return true;
+            }
+        }
+        return false;
+    }
     
+}

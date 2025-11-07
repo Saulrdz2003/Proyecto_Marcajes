@@ -51,8 +51,6 @@ public class Informe extends VistaBase {
         Nombre = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         Apellido = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaFaltas = new javax.swing.JTable();
@@ -73,6 +71,7 @@ public class Informe extends VistaBase {
             }
         });
 
+        CUI.setEditable(true);
         CUI.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 CUIItemStateChanged(evt);
@@ -88,10 +87,6 @@ public class Informe extends VistaBase {
         jLabel3.setText("Hora Entrada");
 
         Apellido.setEditable(false);
-
-        jLabel4.setText("Holgura");
-
-        jTextField1.setEditable(false);
 
         jButton1.setText("Imprimir");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -139,35 +134,26 @@ public class Informe extends VistaBase {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(CUI, 0, 131, Short.MAX_VALUE)
-                        .addComponent(jLabel1)
-                        .addComponent(jLabel2)
-                        .addComponent(Nombre))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Nombre, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+                    .addComponent(CUI, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Apellido)
-                            .addComponent(Apellido1, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
-                            .addComponent(Apellido2, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
-                            .addComponent(Apellido3, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jTextField1))
-                        .addContainerGap())))
+                    .addComponent(Apellido3, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(Apellido, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(Apellido1, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(Apellido2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -189,11 +175,7 @@ public class Informe extends VistaBase {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Apellido3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(Apellido3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(4, 4, 4)
@@ -221,69 +203,66 @@ public class Informe extends VistaBase {
     }//GEN-LAST:event_formWindowActivated
 
     private void CUIItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_CUIItemStateChanged
-    String seleccionado = (String) CUI.getSelectedItem();
+        
+        String seleccionado = (String) CUI.getSelectedItem();
 
-    if (seleccionado != null && !seleccionado.isEmpty()) {
-        try {
-            long codigo = Long.parseLong(seleccionado);
+        Boolean rojo = false;
+        if (seleccionado != null && !seleccionado.isEmpty()) {
+            String[] partes = seleccionado.split("-");
+            if (partes.length > 0 && partes[0] != null && !partes[0].isEmpty()) {
+                try {
+                    long cui = Long.parseLong(partes[0].trim());
 
-            // 1️⃣ Cargar datos personales
-            String[] datos = this.controlador.traerDatos(codigo);
+                    // 1️⃣ Cargar datos personales
+                    String[] datos = this.controlador.traerDatos(cui);
 
-            Nombre.setText(datos[0]);
-            Apellido.setText(datos[1]);
-            Apellido1.setText(datos[2]);
+                    Nombre.setText(datos[0]);
+                    Apellido.setText(datos[1]);
+                    Apellido1.setText(datos[2]);
+                    Apellido2.setText((datos[3] != null && !datos[3].isEmpty()) ? datos[3] : " --- ");
+                    Apellido3.setText((datos[4] != null && !datos[4].isEmpty()) ? datos[4] : " --- ");
 
-            // Verificar individualmente cada uno
-            Apellido2.setText((datos[3] != null && !datos[3].isEmpty()) ? datos[3] : " --- ");
-            Apellido3.setText((datos[4] != null && !datos[4].isEmpty()) ? datos[4] : " --- ");
+                    // 2️⃣ Obtener registros diarios
+                    List<Object[]> registros = this.controlador.obtenerFaltasPorEmpleado(cui);
+                    DefaultTableModel modeloTabla = (DefaultTableModel) tablaFaltas.getModel();
+                    modeloTabla.setRowCount(0);
 
+                    // 3️⃣ Ordenar por fecha
+                    registros.sort(Comparator.comparing(r -> LocalDate.parse((String) r[0])));
 
-            
+                    // 4️⃣ Obtener las faltas y horario del empleado
+                    List<Falta> faltasEmpleado = this.controlador.obtenerFaltasPorCodigo(cui);
+                    Horario horarioEmpleado = this.controlador.getModelo().getHorarios().stream()
+                            .filter(h -> Objects.equals(h.getCodigo(), cui))
+                            .findFirst()
+                            .orElse(null);
 
-            // 2️⃣ Obtener registros diarios
-            List<Object[]> registros = this.controlador.obtenerFaltasPorEmpleado(codigo);
-            DefaultTableModel modeloTabla = (DefaultTableModel) tablaFaltas.getModel();
-            modeloTabla.setRowCount(0);
+                    boolean tieneAlmuerzo = (horarioEmpleado != null
+                            && horarioEmpleado.getHoraAlmuerzo() != null
+                            && horarioEmpleado.getFinAlmuerzo() != null);
 
-            // 3️⃣ Ordenar los registros por fecha (asumiendo formato YYYY-MM-DD)
-            registros.sort(Comparator.comparing(r -> LocalDate.parse((String) r[0])));
+                    // 5️⃣ Llenar tabla
+                    for (Object[] r : registros) {
+                        String dia = (String) r[0];
+                        String entrada = (r[1] == null || ((String) r[1]).isEmpty()) ? "No registrada" : (String) r[1];
+                        String entradaAlm = (r[2] == null || ((String) r[2]).isEmpty()) ? "No registrada" : (String) r[2];
+                        String salidaAlm = (r[3] == null || ((String) r[3]).isEmpty()) ? "No registrada" : (String) r[3];
+                        String salida = (r[4] == null || ((String) r[4]).isEmpty()) ? "No registrada" : (String) r[4];
 
-            // 4️⃣ Obtener las faltas y horario del empleado
-            List<Falta> faltasEmpleado = this.controlador.obtenerFaltasPorCodigo(codigo);
-            Horario horarioEmpleado = this.controlador.getModelo().getHorarios().stream()
-                    .filter(h -> Objects.equals(h.getCodigo(), codigo))
-                    .findFirst()
-                    .orElse(null);
+                        if(entrada == null && entradaAlm == null && salidaAlm == null && salida == null ){
+                            rojo = true;
+                        }
+                        
+                        if (!tieneAlmuerzo) {
+                            entradaAlm = "—";
+                            salidaAlm = "—";
+                        }
 
-            boolean tieneAlmuerzo = (horarioEmpleado != null
-                    && horarioEmpleado.getHoraAlmuerzo() != null
-                    && horarioEmpleado.getFinAlmuerzo() != null);
+                        modeloTabla.addRow(new Object[]{dia, entrada, entradaAlm, salidaAlm, salida});
+                    }
 
-            // 5️⃣ Rellenar la tabla
-            for (Object[] r : registros) {
-                String dia = (String) r[0];
-                String entrada = (String) r[1];
-                String entradaAlm = (String) r[2];
-                String salidaAlm = (String) r[3];
-                String salida = (String) r[4];
-
-                // Normalizar horas
-                entrada = (entrada == null || entrada.isEmpty()) ? "No registrada" : entrada;
-                salida = (salida == null || salida.isEmpty()) ? "No registrada" : salida;
-
-                if (!tieneAlmuerzo) {
-                    entradaAlm = "—";
-                    salidaAlm = "—";
-                } else {
-                    entradaAlm = (entradaAlm == null || entradaAlm.isEmpty()) ? "No registrada" : entradaAlm;
-                    salidaAlm = (salidaAlm == null || salidaAlm.isEmpty()) ? "No registrada" : salidaAlm;
-                }
-
-                modeloTabla.addRow(new Object[]{dia, entrada, entradaAlm, salidaAlm, salida});
-            }
-
-            // 6️⃣ Colorear filas según motivo de falta
+                    // 6️⃣ Colorear filas según motivo de falta
+                    // 6️⃣ Colorear filas según motivo de falta
             tablaFaltas.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
                 @Override
                 public Component getTableCellRendererComponent(JTable table, Object value,
@@ -291,59 +270,67 @@ public class Informe extends VistaBase {
                                                                int row, int column) {
                     Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                     String dia = (String) table.getValueAt(row, 0);
-                    Color colorBase = Color.WHITE;
+                    String entrada = (String) table.getValueAt(row, 1);
+                    String entradaAlm = (String) table.getValueAt(row, 2);
+                    String salidaAlm = (String) table.getValueAt(row, 3);
+                    String salida = (String) table.getValueAt(row, 4);
 
-                    Falta faltaDia = faltasEmpleado.stream()
-                            .filter(f -> f.getDiaFalta().equals(dia))
-                            .findFirst()
-                            .orElse(null);
+                    Color colorBase = Color.GREEN;
 
-                    if (faltaDia != null) {
-                        Falta.MotivoFalta motivo = faltaDia.getMotivo();
-
-                        switch (motivo) {
-                            case FALTA_COMPLETA:
-                                colorBase = Color.RED; // Falta total
-                                break;
-                            case ENTRADA_TARDE:
-                            case SALIDA_TEMPRANA:
-                            case ENTRADA_TARDE_DEL_ALMUERZO:
-                            case SALIDA_TEMPRANA_AL_ALMUERZO:
-                                colorBase = Color.YELLOW; // Llegó tarde o se fue antes
-                                break;
-                            case NO_MARCA_ENTRADA:
-                            case NO_MARCA_SALIDA:
-                            case NO_MARCA_SALIDA_ALMUERZO:
-                            case NO_MARCA_ENTRADA_ALMUERZO:
-                                colorBase = Color.ORANGE; // No marcó
-                                break;
-                            default:
-                                colorBase = Color.GREEN; // Cualquier otro caso
-                        }
+                    // 🔴 Si todas las marcas del día están vacías → Falta total
+                    // Si todas las horas relevantes (entrada y salida) están vacías o "No registradas" → Falta completa
+                    if (
+                        (entrada == null || entrada.equals("No registrada")) &&
+                        (salida == null || salida.equals("No registrada")) &&
+                        (
+                            // El empleado tiene almuerzo y también faltó en esas marcas
+                            (
+                                (!"—".equals(entradaAlm)) &&
+                                (!"—".equals(salidaAlm)) &&
+                                ((entradaAlm == null || entradaAlm.equals("No registrada")) &&
+                                 (salidaAlm == null || salidaAlm.equals("No registrada")))
+                            )
+                            // O no tiene almuerzo (ambas son "—")
+                            || ("—".equals(entradaAlm) && "—".equals(salidaAlm))
+                        )
+                    ) {
+                        colorBase = Color.RED;
                     } else {
-                        colorBase = Color.GREEN; // Sin falta → presente
+                        // Si existe falta registrada, aplicar color correspondiente
+                        Falta faltaDia = faltasEmpleado.stream()
+                                .filter(f -> f.getDiaFalta().equals(dia))
+                                .findFirst()
+                                .orElse(null);
+
+                        if (faltaDia != null) {
+                            colorBase = switch (faltaDia.getMotivo()) {
+                                case FALTA_COMPLETA -> Color.RED;
+                                case ENTRADA_TARDE, SALIDA_TEMPRANA,
+                                     ENTRADA_TARDE_DEL_ALMUERZO, SALIDA_TEMPRANA_AL_ALMUERZO -> Color.YELLOW;
+                                case NO_MARCA_ENTRADA, NO_MARCA_SALIDA,
+                                     NO_MARCA_SALIDA_ALMUERZO, NO_MARCA_ENTRADA_ALMUERZO -> Color.ORANGE;
+                                default -> Color.GREEN;
+                            };
+                        }
                     }
 
-                    c.setBackground(colorBase);
-                    if (isSelected) {
-                        c.setBackground(colorBase.darker());
-                    }
+
+                    c.setBackground(isSelected ? colorBase.darker() : colorBase);
                     return c;
                 }
             });
 
 
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this,
-                    "Error al convertir el CUI a número: " + ex.getMessage(),
-                    "Error de formato", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this,
-                    "Error al obtener las faltas: " + ex.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Error al convertir el CUI a número: " + ex.getMessage(),
+                            "Error de formato", JOptionPane.ERROR_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Error al obtener las faltas: " + ex.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         }
-    }
+
 
 
     }//GEN-LAST:event_CUIItemStateChanged
@@ -418,12 +405,10 @@ public class Informe extends VistaBase {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tablaFaltas;
     // End of variables declaration//GEN-END:variables
 }

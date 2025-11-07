@@ -67,13 +67,14 @@ public class ControlPDF extends ControlBase {
         
         
 
-        Paragraph pSaludo = new Paragraph("Respetable Sr. " + nombre, textoFont);
+        Paragraph pSaludo = new Paragraph("Respetable: " + nombre, textoFont);
         document.add(pSaludo);
         document.add(new Paragraph(" "));     
 
-        String intro = "Deseándoles toda clase de éxitos en el desarrollo de sus actividades diarias y laborales.\n" +
-"\n" +
-"Por este medio, adjunto el listado de faltas cometidas la fecha " + reportando + ", generado por el reloj biométrico, Le solicitamos que, en caso de que algún registro muestre inasistencias no justificadas, se informe mediante una nota dirigida a la Secretaría Adjunta. Esta nota debe entregarse de manera física dentro de un plazo de 3 días hábiles. Además, si existe algún cambio de horario que no haya sido notificado, le pedimos que informen y adjunten una copia del Dictamen correspondiente, emitido por Recursos Humanos.\n";
+        String intro = """
+                       Dese\u00e1ndoles toda clase de \u00e9xitos en el desarrollo de sus actividades diarias y laborales.
+                       
+                       Por este medio, adjunto el listado de faltas cometidas la fecha  """ + reportando + ", generado por el reloj biométrico, Le solicitamos que, en caso de que algún registro muestre inasistencias no justificadas, se informe mediante una nota dirigida a la Secretaría Adjunta. Esta nota debe entregarse de manera física dentro de un plazo de 3 días hábiles. Además, si existe algún cambio de horario que no haya sido notificado, le pedimos que informen y adjunten una copia del Dictamen correspondiente, emitido por Recursos Humanos.\n";
         document.add(new Paragraph(intro, textoFont));
         document.add(new Paragraph(" "));
 
@@ -302,6 +303,79 @@ public class ControlPDF extends ControlBase {
         table.addCell(cell);
     }
     
+    public void escribirInstrucciones()throws FileNotFoundException, DocumentException {
+        // Obtener carpeta Descargas del usuario actual
+        String rutaDescargas = System.getProperty("user.home") + "/Downloads";
+
+        // Nombre fijo del archivo PDF
+        String nombreArchivo = rutaDescargas + "/Instrucciones.pdf";
+        File archivo = new File(nombreArchivo);
+        archivo.getParentFile().mkdirs();
+
+        Document document = new Document();
+        PdfWriter.getInstance(document, new FileOutputStream(archivo));
+        document.open();
+
+        Font tituloFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 15);
+        Font subTituloFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 13);
+        Font textoFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+        Font tablaHeaderFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.WHITE);
+        Font tablaFont = FontFactory.getFont(FontFactory.HELVETICA, 11);
+
+        // --- Encabezado ---
+        Paragraph pTitulo = new Paragraph("Manual Basico de Uso", tituloFont);
+        pTitulo.setAlignment(Element.ALIGN_CENTER);
+        document.add(pTitulo);
+
+        document.add(new Paragraph("1. REQUISITOS", subTituloFont));
+        document.add(new Paragraph("2. PASOS DE USO", subTituloFont));
+        document.add(new Paragraph("3. ACTUALIZAR DATOS", subTituloFont));
+        document.add(new Paragraph("4. POSIBLES FALLOS Y SOLUCIONES", subTituloFont));
+        document.add(new Paragraph(" "));
+
+        document.add(new Paragraph("El proximo manual dara una breve explicación del uso y requisitos necesarios para el funcionamiento del mismo", textoFont));
+        document.add(new Paragraph(""));
+        document.add(new Paragraph("REQUISITOS", tituloFont));
+        document.add(new Paragraph(" "));
+        document.add(new Paragraph("")); 
+        document.add(new Paragraph("Para el debido funcionamiento del programa se necesita los siguiente:"));                                 document.add(new Paragraph("1. Una carpeta para las cartas eh informes"));
+        document.add(new Paragraph("2. Una carpeta a la cual se le introduciran los marcajes de los empleados"));        
+        document.add(new Paragraph("3. La carpeta donde iran los ejecutables para la automatización"));      
+        document.add(new Paragraph("4. Los archivos correspondientes al programa"));      
+        document.add(new Paragraph(" "));
+        document.add(new Paragraph(""));
+        document.add(new Paragraph("PASOS DE USO", tituloFont));
+        document.add(new Paragraph(""));
+        document.add(new Paragraph("Para el debido funcionamiento del programa se deberia realizar los siguientes pasos:"));
+        document.add(new Paragraph("1. Si es su primera vez usando el proyecto, debe exportar datos de su reloj biometrico de la sección Reporte, asegurese de seleccionar todos los empleados de la facultad, guarde dicho archivo en cualquier lado y copie su contenido en algún editor de hojas de calculo, preferiblemente hojas de calculo de Google."));
+        document.add(new Paragraph("2. Exporte su archivo de hojas de calculo a su computador asegurese de exportarlo como csv"));  
+        document.add(new Paragraph("3. Abra su programa de cálculo de marcajes, seleccione la opción CARGAR, la misma le desplegara una notificación, si es su primera vez ejecutando, seleccione la opción NO, en la ventana emergente busque su archivo axportado.")); 
+        document.add(new Paragraph("5. Ahora vuelva a la opción CARGAR, aqui copie y pegue las rutas donde colocara los marcajes exportado y otra donde guardara las cartas eh informes realizados."));      
+        document.add(new Paragraph("6. Cierre su programa para guardar lo realizada, este paso debe realizarlo siempre que cambie datos de los empleados."));
+        document.add(new Paragraph("7. Para realizar los reportes de marcajes repita el paso 1 y 2, con la distinción de exportar datos de la zona AC Reg. del Reloj Biometrico."));
+        document.add(new Paragraph("8. Exporte su archivo como csv, xls o xlsx, asegurece de guardarlo en la carpeta destino seleccionada por usted donde se encontraran los marcajes."));
+        document.add(new Paragraph("9. Inicie el programa de calculo de marcajes, seleccione la opción CREAR REPORTES, seleccione su archivo csv, si no quiere realizar manualmente esta opción solo deje abierto el programa por 90 segundos sin interractuar con el. IMPORTANTE *Exporte en csv si va a realizar reporte manual, de lo contrario exporte con cualquier formato ya mencionado*."));
+        document.add(new Paragraph("10. Su programa realizara las cartas y las guardara en la carpeta previamente seleccionada, el programa se cerrara por si solo."));
+        document.add(new Paragraph(""));       
+        document.add(new Paragraph(""));
+        document.add(new Paragraph("ACTUALIZAR HORARIOS", tituloFont));
+        document.add(new Paragraph("")); 
+        document.add(new Paragraph("Para actualizar las horas para cada empleado siga estas instrucciones:"));
+        document.add(new Paragraph("1. Use el botonn actualizar, sa le pedira usuario y contraseña, Use el usuario Admin Conraseña 1234, esto para eliminar los anteriores registros para actualizar los nuevos, cierre seguidamente el programa"));
+        document.add(new Paragraph("2. Repetrir los pasos 1 y 3 de la sección PASOS A SEGUIR"));
+        document.add(new Paragraph("ERRORES Y SOLUCIONES", tituloFont));
+        document.add(new Paragraph(""));       
+        document.add(new Paragraph(""));
+        document.add(new Paragraph("Crear mas de dos reportes en una sola sesión puede llevar a cabo conflicto de marcajes se recomienda solo crear un reporte a la vez"));       
+        document.add(new Paragraph("existe un error al cargar los horarios para resolverlo se comienda borrar todos los registros del programa para esto, cree un informe a fin de mes, este borra la memoria de las marcas, y luego elimine los horarios con ACTUALIZAR usuario admin contraseña 1234"));
+        document.add(new Paragraph("Si desea cargar o actualizar horarios NO entre a otras opciones del programa"));
+        document.add(new Paragraph("La funcion de reporte automatica puede llegar a se bloqueada por antivirus, ademas asegurese que la carpeta automata este en su escritorio, junto a la carpeta donde estaran las marcas de los empleados"));
+
+// --- Tabla de Nomenclatura de Colores ---
+        
+        document.close();
+    }
+
      
 
 
